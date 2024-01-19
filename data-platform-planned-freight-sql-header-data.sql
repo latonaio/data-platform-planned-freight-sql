@@ -12,29 +12,36 @@ CREATE TABLE `data_platform_planned_freight_header_data`
     `PlannedFreightDepartureTime`               date NOT NULL,
     `PlannedFreightArrivalDate`                 date NOT NULL,
     `PlannedFreightArrivalTime`                 date NOT NULL,
-    `LogisticsPartner`                          int(12) NOT NULL,
+    `SupplyChainRelationshipID`                 int(16) NOT NULL,
+    `SupplyChainRelationshipDeliveryID`         int(6) NOT NULL,
+    `SupplyChainRelationshipDeliveryPlantID`    int(4) NOT NULL,
+    `SupplyChainRelationshipFreightID`          int(4) NOT NULL,
+    `FreightPartner`                            int(12) NOT NULL,
+    `Buyer`                                     int(12) NOT NULL,
+    `Seller`                                    int(12) NOT NULL,
     `DeliverToParty`                            int(12) NOT NULL,
     `DeliverToPlant`                            varchar(4) NOT NULL,
     `DeliverFromParty`                          int(12) NOT NULL,
     `DeliverFromPlant`                          varchar(4) NOT NULL,
+    `PlannedFreightNumberInCharacter`           varchar(100) DEFAULT NULL,
+    `PlannedFreightNumberDescription`           varchar(200) DEFAULT NULL,
     `FRPArea`                                   varchar(10) DEFAULT NULL,
 	`FRPController`                             varchar(3) DEFAULT NULL,
     `FreightCapacityWeight`                     float(15) DEFAULT NULL,
     `FreightCapacityWeightUnit`                 varchar(3) DEFAULT NULL,
+	`PlannedFreightLongText`                    varchar(1000) DEFAULT NULL,
     `CreationDate`                              date NOT NULL,
     `CreationTime`                              date NOT NULL,
     `LastChangeDate`                            date NOT NULL,
     `LastChangeTime`                            date NOT NULL,
-	`PlannedFreightLongText`                    varchar(1000) DEFAULT NULL,
-	`PlannedFreightIsFixed`                     tinyint(1) DEFAULT NULL,
-	`PlannedFreightIsReleased`                  tinyint(1) DEFAULT NULL,
+	`IsReleased`                                tinyint(1) DEFAULT NULL,
 	`IsMarkedForDeletion`                       tinyint(1) DEFAULT NULL,
 
     PRIMARY KEY (`PlannedFreight`),
 	
-    CONSTRAINT `DPFMPlannedFreightHeaderDataFreightAgreementItem_fk` FOREIGN KEY (`FreightAgreement`, `FreightAgreementItem`) REFERENCES `data_platform_freight_agreement_item_data` (`FreightAgreement`, `FreightAgreementItem`),
+    CONSTRAINT `DPFMPlannedFreightHeaderDataFreightAgreementItemAF_fk` FOREIGN KEY (`FreightAgreement`, `FreightAgreementItem`, `FreightAgreementItemAvailableFreight`) REFERENCES `data_platform_freight_agreement_item_available_freight_data` (`FreightAgreement`, `FreightAgreementItem`, `FreightAgreementItemAvailableFreight`),
+    CONSTRAINT `DPFMPlannedFreightHeaderDataSCRFreight_fk` FOREIGN KEY (`SupplyChainRelationshipID`, `SupplyChainRelationshipDeliveryID`, `SupplyChainRelationshipDeliveryPlantID`, `SupplyChainRelationshipFreightID`, `Buyer`, `Seller`, `DeliverToParty`, `DeliverFromParty`, `DeliverToPlant`, `DeliverFromPlant`, `FreightPartner`) REFERENCES `data_platform_scr_freight_relation_data` (`SupplyChainRelationshipID`, `SupplyChainRelationshipDeliveryID`, `SupplyChainRelationshipDeliveryPlantID`, `SupplyChainRelationshipFreightID`, `Buyer`, `Seller`, `DeliverToParty`, `DeliverFromParty`, `DeliverToPlant`, `DeliverFromPlant`, `FreightPartner`),
     CONSTRAINT `DPFMPlannedFreightHeaderDataFreightFreightCapacityWeightUnit_fk` FOREIGN KEY (`FreightCapacityWeightUnit`) REFERENCES `data_platform_quantity_unit_quantity_unit_data` (`QuantityUnit`)
-
 
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
